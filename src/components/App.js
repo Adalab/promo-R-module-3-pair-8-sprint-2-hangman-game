@@ -44,7 +44,6 @@ function App() {
 
   const getNumberOfErrors = () => {
     const numberError = userLetter.filter((letter) => !word.includes(letter));
-    console.log(numberError);
     return numberError.length;
   };
 

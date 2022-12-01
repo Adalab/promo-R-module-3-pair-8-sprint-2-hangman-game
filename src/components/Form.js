@@ -8,6 +8,7 @@ function Form(props) {
   const handleInputLetter = (ev) => {
     props.handleInputLetter(ev.target.value);
   };
+
   return (
     <form className='form' onSubmit={formSubmit}>
       <label className='title' htmlFor='last-letter'>
