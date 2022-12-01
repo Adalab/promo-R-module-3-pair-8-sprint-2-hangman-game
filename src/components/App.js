@@ -8,6 +8,7 @@ import Dummy from './Dummy';
 import SolutionLetters from './SolutionLetters';
 import ErrorLetters from './ErrorLetters';
 import Form from './Form';
+import Footer from './Footer';
 
 function App() {
   // VARIABLES ESTADO
@@ -118,6 +119,7 @@ function App() {
           </section>
           <Dummy numberofErrors={getNumberOfErrors} />
         </main>
+        <Footer></Footer>
       </div>
     </div>
   );
