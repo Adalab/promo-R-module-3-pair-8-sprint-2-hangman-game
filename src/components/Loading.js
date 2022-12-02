@@ -1,5 +1,7 @@
+import '../styles/components/Loading.scss';
+
 function Loading(props) {
-  return props.loading ? <span className='loading' /> : '';
+  return props.isLoading ? <span className='loading' /> : '';
 }
 
 export default Loading;

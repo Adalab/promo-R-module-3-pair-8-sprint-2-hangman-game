@@ -1,5 +1,4 @@
 function Options(props) {
-  console.log(props);
   const handleSubmit = (ev) => {
     ev.preventDefault();
   };
@@ -7,6 +6,7 @@ function Options(props) {
   const handleChange = (ev) => {
     props.handleChange(ev.target.value);
   };
+
   return (
     <form onSubmit={handleSubmit}>
       <label className='title' for='word'>

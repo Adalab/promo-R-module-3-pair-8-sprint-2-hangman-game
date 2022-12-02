@@ -1,22 +1,21 @@
 // import monigota from '../images/monigota.png';
-import '../styles/main.scss';
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import React from 'react';
+import '../styles/App.scss';
 import callToApi from '../services/api';
 import Header from './Header';
-import Dummy from './Dummy';
 import SolutionLetters from './SolutionLetters';
 import ErrorLetters from './ErrorLetters';
+import Dummy from './Dummy';
 import Form from './Form';
-import Footer from './Footer';
 import Instructions from './Instructions';
 import Options from './Options';
+import Footer from './Footer';
 import Loading from './Loading';
 
 function App() {
   // VARIABLES ESTADO
-
   // Varible estado para incrementar el número de fallos
   // const [numberOfErrors, setNumberOfErrors] = useState(0);
   // Variable estado para guardar el carácter introducido en el input
@@ -24,7 +23,7 @@ function App() {
   // Variable estado para almacenar la palabra que se deberá adivinar.
   const [word, setWord] = useState('katakroker');
   // Variable estado para para almacenar y pintar las letras que introduce la jugadora.
-  const [userLetter, setUserLetter] = useState([]);
+  const [userLetters, setUserLetters] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   // Llamada a al Api
@@ -50,8 +49,10 @@ function App() {
   //funcion para pintar en el ahorcado los errores
 
   const getNumberOfErrors = () => {
-    const numberError = userLetter.filter((letter) => !word.includes(letter));
-    return numberError.length;
+    const numberOfErrors = userLetters.filter(
+      (letter) => !word.toLowerCase().includes(letter)
+    );
+    return numberOfErrors.length;
   };
 
   // función para almacenar letra introducida por el usuario
@@ -63,7 +64,7 @@ function App() {
     if (regex.test(value)) {
       setLastLetter(value);
       // ponemos entre corchetes por que es un array sino no lo identificaría como un string lo que cambia en el valor de la constante
-      setUserLetter([...userLetter, value]);
+      setUserLetters([...userLetters, value]);
     } else {
       setLastLetter('');
     }
@@ -71,7 +72,7 @@ function App() {
 
   const handleChange = (value) => {
     setLastLetter('');
-    setUserLetter([]);
+    setUserLetters([]);
     setWord(value);
   };
 
@@ -80,7 +81,7 @@ function App() {
   const renderSolutionLetters = () => {
     const wordLetters = word.split('');
     return wordLetters.map((eachLetter, index) => {
-      const exist = userLetter.includes(eachLetter.toLocaleLowerCase());
+      const exist = userLetters.includes(eachLetter.toLowerCase());
       //Gracias a key podemos ver los guiones sin que se vean las letras.
       // Hemos hecho un ternario para pintar las letras si coinciden con la letra de la Api
       return (
@@ -94,11 +95,11 @@ function App() {
   // Con esta función estamos pintando las letras falladas, pero nos pinta la misma letra si se la ponemos en minúscula y si se la ponemos en mayus también la pinta
 
   const renderErrorLetters = () => {
-    const errorLetter = userLetter.filter(
+    const errorLetters = userLetters.filter(
       (eachUserLetter) =>
-        !word.toLocaleLowerCase().includes(eachUserLetter.toLocaleLowerCase())
+        !word.toLowerCase().includes(eachUserLetter.toLowerCase())
     );
-    return errorLetter.map((letter, index) => {
+    return errorLetters.map((letter, index) => {
       return (
         <li key={index} className='letter'>
           {letter}
@@ -113,7 +114,7 @@ function App() {
         <Header />
 
         <main className='main'>
-          <Loading loading={isLoading} />
+          <Loading isLoading={isLoading} />
           <Routes>
             <Route
               path='/'
@@ -121,12 +122,12 @@ function App() {
                 <section>
                   <SolutionLetters
                     renderSolutionLetters={renderSolutionLetters}
-                    userLetters={userLetter}
+                    userLetterss={userLetters}
                     word={word}
                   />
                   <ErrorLetters
                     renderErrorLetters={renderErrorLetters}
-                    userLetters={userLetter}
+                    userLetterss={userLetters}
                     word={word}
                   />
                   <Form
@@ -142,7 +143,7 @@ function App() {
               element={<Options handleChange={handleChange} word={word} />}
             />
           </Routes>
-          <Dummy numberofErrors={getNumberOfErrors} />
+          <Dummy numberOfErrors={getNumberOfErrors} />
         </main>
         <Footer></Footer>
       </div>

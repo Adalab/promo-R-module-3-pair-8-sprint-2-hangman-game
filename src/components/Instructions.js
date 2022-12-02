@@ -1,3 +1,5 @@
+import '../styles/components/Instructions.scss';
+
 function Instructions() {
   return (
     <section class='instructions'>
