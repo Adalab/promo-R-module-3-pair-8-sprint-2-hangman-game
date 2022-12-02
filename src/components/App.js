@@ -1,6 +1,7 @@
 // import monigota from '../images/monigota.png';
 import '../styles/main.scss';
 import { useState, useEffect } from 'react';
+import { Route, Routes } from 'react-router-dom';
 import React from 'react';
 import callToApi from '../services/api';
 import Header from './Header';
@@ -9,25 +10,30 @@ import SolutionLetters from './SolutionLetters';
 import ErrorLetters from './ErrorLetters';
 import Form from './Form';
 import Footer from './Footer';
+import Instructions from './Instructions';
+import Options from './Options';
+import Loading from './Loading';
 
 function App() {
   // VARIABLES ESTADO
 
   // Varible estado para incrementar el número de fallos
   // const [numberOfErrors, setNumberOfErrors] = useState(0);
-  //Variable estado para guardar el carácter introducido en el input
+  // Variable estado para guardar el carácter introducido en el input
   const [lastLetter, setLastLetter] = useState('');
   // Variable estado para almacenar la palabra que se deberá adivinar.
-  const [word, setWord] = useState('Katakroker');
+  const [word, setWord] = useState('katakroker');
   // Variable estado para para almacenar y pintar las letras que introduce la jugadora.
   const [userLetter, setUserLetter] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Llamada a al Api
 
   useEffect(() => {
+    setIsLoading(true);
     callToApi().then((response) => {
+      setIsLoading(false);
       setWord(response);
-      console.log(response);
     });
   }, []);
 
@@ -61,6 +67,12 @@ function App() {
     } else {
       setLastLetter('');
     }
+  };
+
+  const handleChange = (value) => {
+    setLastLetter('');
+    setUserLetter([]);
+    setWord(value);
   };
 
   // Función para pintar las letras, pero no nos pinta las mayusculas buenas
@@ -101,22 +113,35 @@ function App() {
         <Header />
 
         <main className='main'>
-          <section>
-            <SolutionLetters
-              renderSolutionLetters={renderSolutionLetters}
-              userLetters={userLetter}
-              word={word}
+          <Loading loading={isLoading} />
+          <Routes>
+            <Route
+              path='/'
+              element={
+                <section>
+                  <SolutionLetters
+                    renderSolutionLetters={renderSolutionLetters}
+                    userLetters={userLetter}
+                    word={word}
+                  />
+                  <ErrorLetters
+                    renderErrorLetters={renderErrorLetters}
+                    userLetters={userLetter}
+                    word={word}
+                  />
+                  <Form
+                    handleInputLetter={handleInputLetter}
+                    lastLetter={lastLetter}
+                  />
+                </section>
+              }
             />
-            <ErrorLetters
-              renderErrorLetters={renderErrorLetters}
-              userLetters={userLetter}
-              word={word}
+            <Route path='/instructions' element={<Instructions />} />
+            <Route
+              path='/options'
+              element={<Options handleChange={handleChange} word={word} />}
             />
-            <Form
-              handleInputLetter={handleInputLetter}
-              lastLetter={lastLetter}
-            />
-          </section>
+          </Routes>
           <Dummy numberofErrors={getNumberOfErrors} />
         </main>
         <Footer></Footer>
